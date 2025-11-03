@@ -7,10 +7,20 @@ import { ref } from 'vue'
 const nama = ref('')
 const whatsapp = ref('')
 const layanan = ref('')
-const barang = ref('')
+const barang = ref([])
 const alamat = ref('')
 const pembayaran = ref('')
 const tanggal = ref('')
+
+const barangOptions = ['Selimut', 'Boneka', 'Karpet', 'Sepatu', 'Alat Ibadah', 'Handuk']
+
+const toggleBarang = (item) => {
+  if (barang.value.includes(item)) {
+    barang.value = barang.value.filter((b) => b !== item)
+  } else {
+    barang.value.push(item)
+  }
+}
 
 const submitForm = () => {
   alert('Pesanan berhasil disimpan! 😊')
@@ -18,7 +28,7 @@ const submitForm = () => {
 </script>
 
 <template>
-  <div class="bg-pink-100 min-h-screen flex flex-col pt-15">
+  <div class="bg-blue-50 min-h-screen flex flex-col pt-15">
     <!-- Navbar -->
     <Navbar />
 
@@ -28,7 +38,7 @@ const submitForm = () => {
     <!-- Main Content -->
     <main class="flex-grow py-16 px-6 flex justify-center items-start">
       <div
-        class="bg-white shadow-lg rounded-2xl p-10 w-full max-w-3xl border border-pink-200"
+        class="bg-white shadow-lg rounded-2xl p-10 w-full max-w-3xl border border-blue-200"
       >
         <h2 class="text-3xl font-semibold mb-8 text-gray-800 text-center">
           Reservasi Layanan
@@ -46,7 +56,7 @@ const submitForm = () => {
               v-model="nama"
               type="text"
               placeholder="Masukkan nama Anda"
-              class="w-full p-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 outline-none"
+              class="w-full p-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-400 outline-none"
               required
             />
           </div>
@@ -61,26 +71,26 @@ const submitForm = () => {
               inputmode="numeric"
               pattern="[0-9]*"
               maxlength="15"
-              class="w-full p-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 outline-none"
+              class="w-full p-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-400 outline-none"
               @input="whatsapp = whatsapp.replace(/[^0-9]/g, '')"
               required
             />
           </div>
 
-          <!-- Layanan -->
+          <!-- Jenis Layanan -->
           <div>
             <label class="block font-medium mb-2">Pilih Jenis Layanan</label>
             <div class="grid grid-cols-3 gap-3">
               <button
-                v-for="option in ['Kiloan', 'Boneka', 'Karpet', 'Sepatu', 'Setrika', 'Handuk']"
+                v-for="option in ['Biasa', 'Kilat']"
                 :key="option"
                 type="button"
                 @click="layanan = option"
                 :class="[
-                  'p-3 rounded-lg font-medium shadow-sm transition-all',
+                  'p-3 rounded-lg font-medium shadow-sm transition-all border',
                   layanan === option
-                    ? 'bg-pink-400 text-white'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                    ? 'bg-blue-500 text-white border-blue-500 shadow-md'
+                    : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-blue-100 hover:border-blue-300'
                 ]"
               >
                 {{ option }}
@@ -88,16 +98,25 @@ const submitForm = () => {
             </div>
           </div>
 
-          <!-- Barang -->
+          <!-- Jenis Barang -->
           <div>
             <label class="block font-medium mb-1">Jenis Barang</label>
-            <input
-              v-model="barang"
-              type="text"
-              placeholder="Contoh: Sprei, Jaket, Bantal"
-              class="w-full p-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 outline-none"
-              required
-            />
+            <div class="grid grid-cols-3 gap-3">
+              <button
+                v-for="item in barangOptions"
+                :key="item"
+                type="button"
+                @click="toggleBarang(item)"
+                :class="[
+                  'p-3 rounded-lg font-medium shadow-sm transition-all border',
+                  barang.includes(item)
+                    ? 'bg-blue-500 text-white border-blue-500 shadow-md'
+                    : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-blue-100 hover:border-blue-300'
+                ]"
+              >
+                {{ item }}
+              </button>
+            </div>
           </div>
 
           <!-- Alamat -->
@@ -107,7 +126,7 @@ const submitForm = () => {
               v-model="alamat"
               rows="2"
               placeholder="Masukkan alamat lengkap Anda"
-              class="w-full p-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 outline-none resize-none"
+              class="w-full p-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-400 outline-none resize-none"
               required
             ></textarea>
           </div>
@@ -122,10 +141,10 @@ const submitForm = () => {
                 type="button"
                 @click="pembayaran = option"
                 :class="[
-                  'p-3 rounded-lg font-medium shadow-sm transition-all',
+                  'p-3 rounded-lg font-medium shadow-sm transition-all border',
                   pembayaran === option
-                    ? 'bg-blue-400 text-white'
-                    : 'bg-gray-100 hover:bg-gray-200 text-gray-700'
+                    ? 'bg-blue-500 text-white border-blue-500 shadow-md'
+                    : 'bg-gray-100 text-gray-700 border-gray-200 hover:bg-blue-100 hover:border-blue-300'
                 ]"
               >
                 {{ option }}
@@ -139,7 +158,7 @@ const submitForm = () => {
             <input
               v-model="tanggal"
               type="date"
-              class="w-full p-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-pink-400 outline-none"
+              class="w-full p-3 rounded-md border border-gray-300 shadow-sm focus:ring-2 focus:ring-blue-400 outline-none"
               required
             />
           </div>
@@ -148,7 +167,7 @@ const submitForm = () => {
           <div class="flex justify-center mt-8">
             <button
               type="submit"
-              class="bg-blue-400 hover:bg-blue-500 focus:ring-4 focus:ring-blue-200 text-white font-semibold px-10 py-3 rounded-md shadow-md transition-all transform hover:scale-[1.03]"
+              class="bg-gradient-to-r from-blue-500 to-blue-600 text-white font-semibold px-10 py-3 rounded-full shadow-md hover:scale-105 transition-all transform"
             >
               Selesai Pesanan
             </button>
@@ -158,14 +177,14 @@ const submitForm = () => {
         <!-- Ringkasan Pesanan -->
         <div
           v-if="nama || layanan"
-          class="bg-gray-50 p-5 rounded-lg mt-10 shadow-inner border border-gray-200"
+          class="bg-blue-50 p-5 rounded-lg mt-10 shadow-inner border border-blue-200"
         >
           <h3 class="font-semibold mb-2 text-gray-800">Ringkasan Pesanan:</h3>
           <ul class="space-y-1 text-gray-700 text-sm">
             <li><strong>Nama:</strong> {{ nama }}</li>
             <li><strong>WhatsApp:</strong> {{ whatsapp }}</li>
             <li><strong>Layanan:</strong> {{ layanan }}</li>
-            <li><strong>Barang:</strong> {{ barang }}</li>
+            <li><strong>Barang:</strong> {{ barang.join(', ') }}</li>
             <li><strong>Alamat:</strong> {{ alamat }}</li>
             <li><strong>Pembayaran:</strong> {{ pembayaran }}</li>
             <li><strong>Tanggal:</strong> {{ tanggal }}</li>
