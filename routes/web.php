@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 Route::get('/', function () {
@@ -12,6 +13,13 @@ Route::get('/dashboard', function () {
     return Inertia::render('Dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('/laundry-history', function () {
+    return Inertia::render('auth/LaundryHistory');
+})->middleware(['auth']);
+
+Route::get('/my-laundry', function () {
+    return Inertia::render('auth/MyLaundry');
+})->middleware(['auth']);
 Route::get('/test', fn() => Inertia::render('test'))->name('test');
 Route::get('/landing', fn() => Inertia::render('LandingPage'))->name('landing');
 Route::get('/reservasi', fn() => Inertia::render('Reservasi'));
@@ -23,6 +31,13 @@ Route::get('/user-profile', function () {
         'user' => Auth::user(),
     ]);
 })->middleware(['auth']);
+use App\Http\Controllers\ProfileController;
+
+Route::middleware(['auth'])->group(function () {
+    Route::post('/profile/update', [ProfileController::class, 'update'])->name('profile.update');
+});
+
+
 
 require __DIR__.'/settings.php';
 require __DIR__.'/auth.php';

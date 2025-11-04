@@ -15,11 +15,11 @@
             <a
               :href="menu.link"
               class="flex items-center gap-2 py-2 px-4 rounded-xl transition-all duration-200 ease-in-out"
-              :class="
+              :class="[
                 isActive(menu.link)
                   ? 'bg-[#3cb4ff] shadow-md'
                   : 'hover:bg-[#5ec7ff]/80 hover:shadow-sm'
-              "
+              ]"
             >
               <span class="material-icons text-white">{{ menu.icon }}</span>
               <span>{{ menu.text }}</span>
@@ -31,32 +31,42 @@
 
     <!-- 🔹 Bagian Logout -->
     <div class="border-t border-white/40 mx-3 mb-4 pt-3">
-      <a
-        href="/login"
-        class="flex items-center gap-2 py-2 px-4 rounded-xl transition-all duration-200 ease-in-out hover:bg-[#ff4d4d]/90 hover:shadow-sm"
+      <button
+        @click="logout"
+        class="flex items-center gap-2 w-full text-left py-2 px-4 rounded-xl transition-all duration-200 ease-in-out hover:bg-[#ff4d4d]/90 hover:shadow-sm"
       >
         <span class="material-icons text-white">logout</span>
         Logout
-      </a>
+      </button>
     </div>
   </aside>
 </template>
 
 <script setup>
 import { ref } from "vue";
-import { usePage } from "@inertiajs/vue3";
+import { usePage, router } from "@inertiajs/vue3";
 
 const page = usePage();
 
-// 🔹 Tambahkan Beranda paling atas
+// 🔹 Menu navigasi
 const menus = ref([
   { text: "Beranda", icon: "home", link: "/landing" },
   { text: "My Profile", icon: "person", link: "/user-profile" },
-  { text: "My Laundry", icon: "local_laundry_service", link: "/historyp" },
-  { text: "Laundry History", icon: "history", link: "/auth-historyp" },
+  { text: "My Laundry", icon: "local_laundry_service", link: "/my-laundry" },
+  { text: "Laundry History", icon: "history", link: "/laundry-history" },
 ]);
 
+// 🔹 Cek halaman aktif
 const isActive = (link) => page.url.startsWith(link);
+
+// 🔹 Fungsi Logout
+const logout = () => {
+  router.post("/logout", {}, {
+    onSuccess: () => {
+      router.visit("/landing"); // arahkan ke landing page
+    },
+  });
+};
 </script>
 
 <style scoped>

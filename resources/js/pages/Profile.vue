@@ -49,7 +49,7 @@
                     />
                   </template>
                   <template v-else>
-                    <p class="font-semibold text-gray-400 italic">{{ form.nama_lengkap || 'Belum diisi' }}</p>
+                    <p class="font-semibold text-black-400">{{ form.nama_lengkap || 'Belum diisi' }}</p>
                   </template>
                 </div>
 
@@ -64,26 +64,11 @@
                     />
                   </template>
                   <template v-else>
-                    <p class="font-semibold text-gray-400 italic">{{ form.nomor_telepon || 'Belum diisi' }}</p>
+                    <p class="font-semibold text-black-400">{{ form.nomor_telepon || 'Belum diisi' }}</p>
                   </template>
                 </div>
 
-                <div class="bg-white border border-pink-100 rounded-xl p-3">
-                  <p class="text-sm text-gray-500">Jenis Kelamin</p>
-                  <template v-if="editMode">
-                    <select
-                      v-model="form.jenis_kelamin"
-                      class="w-full border rounded-lg px-3 py-1 focus:ring-2 focus:ring-pink-300 outline-none"
-                    >
-                      <option value="">Pilih Jenis Kelamin</option>
-                      <option value="Laki-laki">Laki-laki</option>
-                      <option value="Perempuan">Perempuan</option>
-                    </select>
-                  </template>
-                  <template v-else>
-                    <p class="font-semibold text-gray-400 italic">{{ form.jenis_kelamin || 'Belum diisi' }}</p>
-                  </template>
-                </div>
+    
               </div>
             </div>
 
@@ -103,7 +88,7 @@
                     />
                   </template>
                   <template v-else>
-                    <p class="font-semibold text-gray-400 italic">{{ form.alamat_lengkap || 'Belum diisi' }}</p>
+                    <p class="font-semibold text-black-400">{{ form.alamat_lengkap || 'Belum diisi' }}</p>
                   </template>
                 </div>
 
@@ -118,7 +103,7 @@
                     />
                   </template>
                   <template v-else>
-                    <p class="font-semibold text-gray-400 italic">{{ form.catatan_lokasi || 'Belum diisi' }}</p>
+                    <p class="font-semibold text-black-400">{{ form.catatan_lokasi || 'Belum diisi' }}</p>
                   </template>
                 </div>
 
@@ -173,7 +158,6 @@ const form = ref({
   email: user.email,
   nama_lengkap: user.nama_lengkap || "",
   nomor_telepon: user.nomor_telepon || "",
-  jenis_kelamin: user.jenis_kelamin || "",
   alamat_lengkap: user.alamat_lengkap || "",
   catatan_lokasi: user.catatan_lokasi || "",
 });
