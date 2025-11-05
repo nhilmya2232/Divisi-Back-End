@@ -1,109 +1,104 @@
-<script setup lang="ts">
-import AuthenticatedSessionController from '@/actions/App/Http/Controllers/Auth/AuthenticatedSessionController';
-import InputError from '@/components/InputError.vue';
-import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { Checkbox } from '@/components/ui/checkbox';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthBase from '@/layouts/AuthLayout.vue';
-import { register } from '@/routes';
-import { request } from '@/routes/password';
-import { Form, Head } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
-
-defineProps<{
-    status?: string;
-    canResetPassword: boolean;
-}>();
-</script>
-
 <template>
-    <AuthBase
-        title="Log in to your account"
-        description="Enter your email and password below to log in"
-    >
-        <Head title="Log in" />
-
-        <div
-            v-if="status"
-            class="mb-4 text-center text-sm font-medium text-green-600"
-        >
-            {{ status }}
+    <div class="min-h-screen flex flex-col items-center justify-center bg-white relative">
+      <div class="bg-white border border-gray-300 rounded-xl shadow-md p-8 w-full max-w-md relative">
+        
+        <!-- 🔹 Icon User -->
+        <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white border-2 border-gray-300 rounded-full w-16 h-16 flex items-center justify-center">
+          <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+              d="M5.121 17.804A9 9 0 1118.879 17.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+          </svg>
         </div>
-
-        <Form
-            v-bind="AuthenticatedSessionController.store.form()"
-            :reset-on-success="['password']"
-            v-slot="{ errors, processing }"
-            class="flex flex-col gap-6"
-        >
-            <div class="grid gap-6">
-                <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
-                    <Input
-                        id="email"
-                        type="email"
-                        name="email"
-                        required
-                        autofocus
-                        :tabindex="1"
-                        autocomplete="email"
-                        placeholder="email@example.com"
-                    />
-                    <InputError :message="errors.email" />
-                </div>
-
-                <div class="grid gap-2">
-                    <div class="flex items-center justify-between">
-                        <Label for="password">Password</Label>
-                        <TextLink
-                            v-if="canResetPassword"
-                            :href="request()"
-                            class="text-sm"
-                            :tabindex="5"
-                        >
-                            Forgot password?
-                        </TextLink>
-                    </div>
-                    <Input
-                        id="password"
-                        type="password"
-                        name="password"
-                        required
-                        :tabindex="2"
-                        autocomplete="current-password"
-                        placeholder="Password"
-                    />
-                    <InputError :message="errors.password" />
-                </div>
-
-                <div class="flex items-center justify-between">
-                    <Label for="remember" class="flex items-center space-x-3">
-                        <Checkbox id="remember" name="remember" :tabindex="3" />
-                        <span>Remember me</span>
-                    </Label>
-                </div>
-
-                <Button
-                    type="submit"
-                    class="mt-4 w-full"
-                    :tabindex="4"
-                    :disabled="processing"
-                    data-test="login-button"
-                >
-                    <LoaderCircle
-                        v-if="processing"
-                        class="h-4 w-4 animate-spin"
-                    />
-                    Log in
-                </Button>
+  
+        <!-- 🔹 Toggle -->
+        <div class="flex justify-center mb-6 mt-8">
+          <button
+            class="bg-blue-200 text-gray-600 font-semibold px-5 py-2 rounded-l-md"
+            @click="goToRegister"
+          >
+            SIGNUP
+          </button>
+          <button
+            class="bg-blue-500 text-white font-semibold px-5 py-2 rounded-r-md"
+          >
+            LOGIN
+          </button>
+        </div>
+  
+        <!-- 🔹 Form Login -->
+        <form @submit.prevent="handleLogin">
+          <div class="space-y-4">
+            <div>
+              <label class="block text-sm font-bold text-gray-800 mb-1">Username</label>
+              <input
+                v-model="form.username"
+                type="text"
+                placeholder="Masukkan username"
+                required
+                class="w-full border border-gray-400 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300 text-gray-800"
+                autocomplete="off"
+                />
             </div>
-
-            <div class="text-center text-sm text-muted-foreground">
-                Don't have an account?
-                <TextLink :href="register()" :tabindex="5">Sign up</TextLink>
+  
+            <div>
+              <label class="block text-sm font-bold text-gray-800 mb-1">Password</label>
+              <input
+                v-model="form.password"
+                type="password"
+                placeholder="Masukkan password"
+                required
+                class="w-full border border-gray-400 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300 text-gray-800"
+                autocomplete="off"
+                />
             </div>
-        </Form>
-    </AuthBase>
-</template>
+  
+            <div class="flex items-center">
+              <input id="remember" type="checkbox" v-model="form.remember" class="mr-2" />
+              <label for="remember" class="text-sm text-gray-700">Ingat saya</label>
+            </div>
+          </div>
+  
+          <button
+            type="submit"
+            class="w-full mt-6 bg-pink-400 text-white font-bold py-2 rounded-md hover:bg-pink-500 transition"
+          >
+            LOGIN
+          </button>
+        </form>
+  
+        <p class="text-center text-sm text-gray-600 mt-4">
+          Belum punya akun?
+          <a @click.prevent="goToRegister" href="#" class="text-pink-500 font-semibold hover:underline">
+            Daftar sekarang
+          </a>
+        </p>
+      </div>
+    </div>
+  </template>
+  
+ <script setup>
+import { ref } from 'vue'
+import { router } from '@inertiajs/vue3'
+
+const form = ref({
+  username: '',
+  password: '',
+  remember: false,
+})
+
+function handleLogin() {
+  router.post('/login', form.value, {
+    onSuccess: () => {
+      router.visit('/landing')
+    },
+    onError: (errors) => {
+      console.error(errors)
+      alert('Username atau password salah!')
+    },
+  })
+}
+
+function goToRegister() {
+  router.visit('/register')
+}
+</script>

@@ -4,6 +4,7 @@ use Illuminate\Foundation\Application;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\Auth;
 use Inertia\Inertia;
 
 Route::get('/', fn() => Inertia::render('LandingPage'))->name('landing');

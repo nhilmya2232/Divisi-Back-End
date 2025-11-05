@@ -1,111 +1,123 @@
-<script setup lang="ts">
-import RegisteredUserController from '@/actions/App/Http/Controllers/Auth/RegisteredUserController';
-import InputError from '@/components/InputError.vue';
-import TextLink from '@/components/TextLink.vue';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import AuthBase from '@/layouts/AuthLayout.vue';
-import { login } from '@/routes';
-import { Form, Head } from '@inertiajs/vue3';
-import { LoaderCircle } from 'lucide-vue-next';
-</script>
-
 <template>
-    <AuthBase
-        title="Create an account"
-        description="Enter your details below to create your account"
-    >
-        <Head title="Register" />
+  <div class="min-h-screen flex flex-col items-center justify-center bg-white relative">
+    <div class="bg-white border border-gray-300 rounded-xl shadow-md p-8 w-full max-w-md relative">
+      
+      <!-- 🔹 Icon User -->
+      <div class="absolute -top-8 left-1/2 transform -translate-x-1/2 bg-white border-2 border-gray-300 rounded-full w-16 h-16 flex items-center justify-center">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+            d="M5.121 17.804A9 9 0 1118.879 17.804M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+        </svg>
+      </div>
 
-        <Form
-            v-bind="RegisteredUserController.store.form()"
-            :reset-on-success="['password', 'password_confirmation']"
-            v-slot="{ errors, processing }"
-            class="flex flex-col gap-6"
+      <!-- 🔹 Toggle -->
+      <div class="flex justify-center mb-6 mt-8">
+        <button
+          class="bg-blue-500 text-white font-semibold px-5 py-2 rounded-l-md"
         >
-            <div class="grid gap-6">
-                <div class="grid gap-2">
-                    <Label for="name">Name</Label>
-                    <Input
-                        id="name"
-                        type="text"
-                        required
-                        autofocus
-                        :tabindex="1"
-                        autocomplete="name"
-                        name="name"
-                        placeholder="Full name"
-                    />
-                    <InputError :message="errors.name" />
-                </div>
+          SIGNUP
+        </button>
+        <button
+          class="bg-blue-200 text-gray-600 font-semibold px-5 py-2 rounded-r-md"
+          @click="goToLogin"
+        >
+          LOGIN
+        </button>
+      </div>
 
-                <div class="grid gap-2">
-                    <Label for="email">Email address</Label>
-                    <Input
-                        id="email"
-                        type="email"
-                        required
-                        :tabindex="2"
-                        autocomplete="email"
-                        name="email"
-                        placeholder="email@example.com"
-                    />
-                    <InputError :message="errors.email" />
-                </div>
+      <!-- 🔹 Form -->
+      <form @submit.prevent="handleSubmit">
+        <div class="space-y-4">
+          <div>
+            <label class="block text-sm font-bold text-gray-800 mb-1">Email Address</label>
+            <input
+              v-model="form.email"
+              type="email"
+              placeholder="Masukkan email"
+              required
+              class="w-full border border-gray-400 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300 text-gray-800"
+              autocomplete="off"
+            />
+          </div>
 
-                <div class="grid gap-2">
-                    <Label for="password">Password</Label>
-                    <Input
-                        id="password"
-                        type="password"
-                        required
-                        :tabindex="3"
-                        autocomplete="new-password"
-                        name="password"
-                        placeholder="Password"
-                    />
-                    <InputError :message="errors.password" />
-                </div>
+          <div>
+            <label class="block text-sm font-bold text-gray-800 mb-1">Username</label>
+            <input
+              v-model="form.username"
+              type="text"
+              placeholder="Masukkan username"
+              required
+              class="w-full border border-gray-400 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300 text-gray-800"
+              autocomplete="off"
+            />
+          </div>
 
-                <div class="grid gap-2">
-                    <Label for="password_confirmation">Confirm password</Label>
-                    <Input
-                        id="password_confirmation"
-                        type="password"
-                        required
-                        :tabindex="4"
-                        autocomplete="new-password"
-                        name="password_confirmation"
-                        placeholder="Confirm password"
-                    />
-                    <InputError :message="errors.password_confirmation" />
-                </div>
+          <div>
+            <label class="block text-sm font-bold text-gray-800 mb-1">Password</label>
+            <input
+              v-model="form.password"
+              type="password"
+              placeholder="Masukkan password"
+              required
+              class="w-full border border-gray-400 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300 text-gray-800"
+              autocomplete="off"
+            />
+          </div>
 
-                <Button
-                    type="submit"
-                    class="mt-2 w-full"
-                    tabindex="5"
-                    :disabled="processing"
-                    data-test="register-user-button"
-                >
-                    <LoaderCircle
-                        v-if="processing"
-                        class="h-4 w-4 animate-spin"
-                    />
-                    Create account
-                </Button>
-            </div>
+          <!-- 🔹 Tambahan konfirmasi password -->
+          <div>
+            <label class="block text-sm font-bold text-gray-800 mb-1">Konfirmasi Password</label>
+            <input
+              v-model="form.password_confirmation"
+              type="password"
+              placeholder="Ulangi password"
+              required
+              class="w-full border border-gray-400 rounded-md px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300 text-gray-800"
+              autocomplete="off"
+            />
+          </div>
 
-            <div class="text-center text-sm text-muted-foreground">
-                Already have an account?
-                <TextLink
-                    :href="login()"
-                    class="underline underline-offset-4"
-                    :tabindex="6"
-                    >Log in</TextLink
-                >
-            </div>
-        </Form>
-    </AuthBase>
+          <div class="flex items-center">
+            <input id="remember" type="checkbox" v-model="form.remember" class="mr-2" />
+            <label for="remember" class="block text-sm font-bold text-gray-800 mb-1">Ingat saya</label>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full mt-6 bg-pink-400 text-white font-bold py-2 rounded-md hover:bg-pink-500 transition"
+        >
+          SIGNUP
+        </button>
+      </form>
+    </div>
+  </div>
 </template>
+
+<script setup>
+import { ref } from 'vue'
+import { router } from '@inertiajs/vue3'
+
+const form = ref({
+  email: '',
+  username: '',
+  password: '',
+  password_confirmation: '',
+})
+
+function handleSubmit() {
+  router.post('/register', form.value, {
+    onSuccess: () => {
+      router.visit('/login')
+    },
+    onError: (errors) => {
+      console.error(errors)
+      alert('Gagal mendaftar, periksa kembali form kamu!')
+    },
+  })
+}
+
+function goToLogin() {
+  router.visit('/login')
+}
+</script>
